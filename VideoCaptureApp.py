@@ -61,7 +61,7 @@ class VideoCaptureApp:
         imgtk = ImageTk.PhotoImage(image=img)
         self.feed.imgtk = imgtk
         self.feed.configure(image=imgtk)
-        self.feed.after(1, self.video_stream)
+        self.feed.after(1000//60, self.video_stream)
 
     def save_frame(self):
         file_path = asksaveasfilename(
