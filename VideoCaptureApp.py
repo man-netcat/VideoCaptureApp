@@ -8,14 +8,20 @@ from pygrabber.dshow_graph import FilterGraph
 
 
 class VideoCaptureApp:
-    def __init__(self, camera_devices):
+    def __init__(self):
+
+        self.graph = FilterGraph()
+        try:
+            self.camera_devices = self.graph.get_input_devices()
+        except ValueError as e:
+            tk.messagebox.showerror('Error', "No camera device detected.")
+            exit()
+
         self.root = tk.Tk()
         self.app = tk.Frame(self.root, bg="white")
         self.app.grid()
         self.feed = tk.Label(self.app)
         self.feed.grid(row=0, column=0, columnspan=4)
-
-        self.camera_devices = camera_devices
 
         self.selected_cam = tk.StringVar(self.root)
         self.selected_cam.set(self.camera_devices[0])
@@ -103,10 +109,7 @@ class VideoCaptureApp:
 
     def show_error(self, *args):
         err = traceback.format_exception(*args)
-        for line in err:
-            print(line)
-        exit()
-        # tk.messagebox.showerror('Error', err)
+        tk.messagebox.showerror('Error', err)
 
     def run(self):
         self.video_stream()
@@ -114,10 +117,5 @@ class VideoCaptureApp:
 
 
 if __name__ == "__main__":
-    graph = FilterGraph()
-    try:
-        camera_devices = graph.get_input_devices()
-    except ValueError as e:
-        tk.messagebox.showerror('Error', "No camera device detected.")
-    app = VideoCaptureApp(camera_devices)
+    app = VideoCaptureApp()
     app.run()
